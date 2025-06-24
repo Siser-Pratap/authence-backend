@@ -1,21 +1,16 @@
 // routes/serviceOwnerRoutes.js
 import express from 'express';
-import crypto from 'crypto';
-import companies from "../../db/companies.js"; 
+import { registerCompany, loginCompany, deleteCompany, generateApiKey, deleteApiKey, getCompanyProfile, getCompanyApiKey} from '../../controllers/companyController.js';
 
 const router = express.Router();
 
+router.post('/register-company', registerCompany);
+router.post('/login-company', loginCompany);
+router.delete('/delete-company', deleteCompany);
+router.post('/generate-api-key', generateApiKey);
+router.post('/delete-api-key', deleteApiKey);
+router.get('/get-profile', getCompanyProfile);
+router.get('/get-api-key', getCompanyApiKey);
 
-router.post('/register-company', (req, res) => {
-    const { companyName } = req.body;
-    if (companies.find(c => c.name === companyName)) {
-        return res.status(400).json({ error: 'Company already exists' });
-    }
-
-    const apiKey = crypto.randomBytes(24).toString('hex');
-    const tenantId = `tenant-${Date.now()}`;
-    companies.push({ name: companyName, apiKey, tenantId });
-    res.json({ apiKey });
-});
 
 export default router;
